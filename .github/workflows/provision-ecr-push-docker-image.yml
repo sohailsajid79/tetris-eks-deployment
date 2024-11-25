@@ -52,7 +52,7 @@ jobs:
       - name: Terraform Apply ECR
         working-directory: terraform
         run: |
-          terraform apply -target=module.aws_ecr_repository.aws_ecr_repository.tm_app -auto-approve
+          terraform apply -target=module.aws_ecr_repository.aws_ecr_repository.js_app -auto-approve
 
   docker-build-push:
     runs-on: ubuntu-latest
