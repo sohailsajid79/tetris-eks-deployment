@@ -3,17 +3,17 @@
   "version": "1.0.0",
   "description": "The classic Tetris game with pure JS",
   "private": true,
-  "dependencies": {},
   "devDependencies": {
     "css-loader": "^4.2.1",
     "html-webpack-plugin": "^4.3.0",
     "style-loader": "^1.2.1",
     "terser-webpack-plugin": "^4.1.0",
-    "webpack": "^4.44.1",
-    "webpack-cli": "^3.3.12"
+    "webpack": "^5.96.1",
+    "webpack-cli": "^5.1.4"
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "webpack --mode production",
     "deploy": "surge --project ./dist/ --domain tetromino.surge.sh"
   },
   "repository": {
