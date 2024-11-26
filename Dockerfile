@@ -1,27 +1,18 @@
 # Stage 1: Build application
 
 FROM node:18-alpine AS builder
-
 WORKDIR /app
-
 COPY package*.json ./
-
 RUN npm install
-
 COPY . .
-
 RUN npm run build
 
-# Stage 2: Serve application with NGINX
+#Production
 
 FROM nginx:alpine
-
-# Copy the build output to the NGINX directory
+RUN addgroup -S team-delta && adduser -S team-delta -G team-delta
 COPY --from=builder /app/dist /usr/share/nginx/html
-
-# default NGINX configuration to listen on port 80
-COPY default.conf /etc/nginx/conf.d/default.conf
-
+RUN chown -R team-delta:team-delta /usr/share/nginx/html
+USER team-delta
 EXPOSE 80
-
 CMD ["nginx", "-g", "daemon off;"]
