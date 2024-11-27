@@ -1,6 +1,6 @@
 #iam role
-resource "aws_iam_role" "my-role" {
-  name = var.aws_iam_role_name
+resource "aws_iam_role" "controller-role" {
+  name = "controller"
 
 
   assume_role_policy = jsonencode({
