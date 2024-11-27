@@ -21,3 +21,9 @@ module "vpc" {
   private_subnet_count = 2
 
 }
+
+module "security_group" {
+  source = "./modules/security_group"
+  name   = "eks-sg"
+  vpc_id = module.vpc.vpc_id
+}
