@@ -13,3 +13,11 @@ output "private_subnets" {
 output "nat_gateway_id" {
   value = aws_nat_gateway.nat_gw.id
 }
+
+output "vpc_cidr" {
+  value       = aws_vpc.this.cidr_block
+}
+
+output "nat_eip" {
+  value       = aws_eip.nat_eip
+}
