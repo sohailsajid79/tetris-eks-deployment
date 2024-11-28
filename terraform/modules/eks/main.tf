@@ -1,52 +1,25 @@
-#create the eks cluster
+resource "aws_eks_cluster" "my_cluster" {
+  name     = var.cluster_name
+  role_arn = var.eks_cluster_role
 
-resource "aws_eks_cluster" "my-cluster" {
-  name     = "my-cluster"
-
-# makes sure these dependencies are created before eks creates a cluster as they depend on them
-  depends_on = [
-    aws_iam_role_policy_attachment.example-AmazonEKSClusterPolicy,
-    aws_iam_role_policy_attachment.example-AmazonEKSVPCResourceController,
-  ]
-
-  role_arn = aws_iam_role.example.arn
-
-      vpc_config {
-        subnet_ids = [aws_subnet.example1.id, aws_subnet.example2.id]
-
+  vpc_config {
+    subnet_ids = var.private_subnets
   }
-
 }
 
-# create eks node group
-
-
-resource "aws_eks_node_group" "example" {
-  cluster_name    = "my-cluster"
-  node_group_name = "my-node_group"
-  node_role_arn   = aws_iam_role.example.arn
-  subnet_ids      = aws_subnet.example[*].id
+resource "aws_eks_node_group" "node_group" {
+  cluster_name    = aws_eks_cluster.my_cluster.name
+  node_group_name = "${var.cluster_name}-node-group"
+  node_role_arn   = var.eks_node_role
+  subnet_ids      = var.private_subnets
 
   scaling_config {
-    desired_size = 1
-    max_size     = 2
-    min_size     = 1
+    desired_size = var.node_desired_size
+    max_size     = var.node_max_size
+    min_size     = var.node_min_size
   }
 
   update_config {
-    max_unavailable = 1
+    max_unavailable = var.max_unavailable
   }
-
-
-  depends_on = [
-    aws_iam_role_policy_attachment.example-AmazonEKSWorkerNodePolicy,
-    aws_iam_role_policy_attachment.example-AmazonEKS_CNI_Policy,
-    aws_iam_role_policy_attachment.example-AmazonEC2ContainerRegistryReadOnly,
-  ]
 }
-
-
-
-
-
-
