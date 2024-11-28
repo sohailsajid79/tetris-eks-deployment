@@ -15,9 +15,9 @@ output "nat_gateway_id" {
 }
 
 output "vpc_cidr" {
-  value       = aws_vpc.this.cidr_block
+  value = aws_vpc.this.cidr_block
 }
 
 output "nat_eip" {
-  value       = aws_eip.nat_eip
+  value = aws_eip.nat_eip
 }
