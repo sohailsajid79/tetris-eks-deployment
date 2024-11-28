@@ -13,45 +13,46 @@ A recorded walkthrough of the setup and functionality.
 
 https://github.com/user-attachments/assets/ac244d5f-85e7-4b8f-a3b7-a6753df467c4
 
-## **Project Objectives**
-
-| Objective                                           | Description                                                                                   |
-|-----------------------------------------------------|-----------------------------------------------------------------------------------------------|
-| **Board / Tickets**                                 | Manage project tasks effectively using a ticketing system.                                    |
-| **Terraform for AWS Infrastructure**               | Provision AWS resources such as EKS, VPC, and other required infrastructure.                  |
-| **Setup NGINX Ingress Controller for Kubernetes**   | Enable routing for Kubernetes services using NGINX Ingress.                                   |
-| **Setup Monitoring with Prometheus and Grafana**    | Provide visibility and monitoring for the cluster and application performance.                |
-| **Setup Security in the Pipeline**                 | Incorporate tools like **Trivy** (container security) and **Checkov** (infrastructure security). |
-
----
-
-## **Why Each Component is Needed**
 
 ### **Terraform for AWS Infrastructure**
-- **Purpose**: Automate the provisioning of AWS resources such as EKS, VPC, subnets, and security groups.
-- **Outcome**: Achieve infrastructure as code (IaC) for reproducible and scalable deployments.
-
-### **NGINX Ingress Controller**
-- **Purpose**: Manage HTTP and HTTPS traffic to Kubernetes services using Ingress resources.
-- **Outcome**: Simplifies external access to applications in the Kubernetes cluster.
-
-### **Monitoring with Prometheus and Grafana**
-- **Purpose**: Enable observability of system health, resource usage, and application metrics.
-- **Outcome**: Real-time insights and proactive issue detection.
-
-### **Security in the Pipeline**
-- **Trivy**: Scans container images for vulnerabilities.
-- **Checkov**: Validates Terraform configurations for security best practices.
-- **Outcome**: Improve security posture and mitigate risks early in the development lifecycle.
+Through the use of **Terraform**, you can automate and standardise the provisioning of AWS resources, ensuring efficient and consistent infrastructure management:
+- **Purpose**: Define and deploy core AWS components such as **Amazon EKS clusters**, **VPCs**, **subnets**, and **security groups** using declarative Infrastructure as Code (IaC).
+- **Key Benefits**:
+  - Achieves reproducible, version-controlled infrastructure for consistent environments.
+  - Provides scalable and modular configurations adaptable to changing requirements.
+  - Reduces manual intervention while embedding best practices into the automation process.
 
 ---
 
-## **Pipelines**
+### **NGINX Ingress Controller**
+Utilising the **NGINX Ingress Controller** allows for efficient management of application traffic in Kubernetes environments:
+- **Purpose**: Handle HTTP and HTTPS traffic using **Ingress resources**, giving you full control over routing to services within the cluster.
+- **Key Benefits**:
+  - Simplifies external access to services with advanced routing and load balancing capabilities.
+  - Offers extensive configurability, including TLS termination and path-based routing.
+  - Minimises operational complexity by centralising traffic management for Kubernetes services.
 
-| Pipeline             | Description                                                                                       |
-|----------------------|---------------------------------------------------------------------------------------------------|
-| **Pipeline 1**       | Deploys Terraform configurations to provision AWS infrastructure (EKS, VPC, etc.) using modules. |
-| **Pipeline 2**       | Runs security tests (Trivy and Checkov), builds Docker images, pushes them to ECR, and deploys to EKS. |
+---
+
+### **Monitoring with Prometheus and Grafana**
+With **Prometheus** and **Grafana**, you can establish a robust observability framework for monitoring infrastructure and application performance:
+- **Purpose**: Collect, monitor, and visualise metrics to track system health, resource usage, and application behaviour.
+- **Key Benefits**:
+  - Delivers real-time insights into infrastructure and workloads, enabling proactive troubleshooting.
+  - Supports the creation of custom dashboards to visualise metrics tailored to your operational needs.
+  - Fully integrates with Kubernetes, providing a comprehensive view of cluster performance and health.
+
+---
+
+### **Security in the Pipeline**
+Integrating security tools into your CI/CD pipeline enhances your ability to identify and address risks early:
+- **Trivy**: Performs vulnerability scans on container images, identifying potential security issues before deployment.
+- **Checkov**: Validates Terraform configurations against security best practices, reducing the likelihood of misconfigurations.
+- **Key Benefits**:
+  - Strengthens your security posture with automated, continuous checks.
+  - Reduces downstream vulnerabilities by addressing risks early in the development lifecycle.
+  - Provides confidence in deployment security by embedding best practices throughout the pipeline.
+
 
 ---
 
