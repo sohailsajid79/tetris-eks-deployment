@@ -1,0 +1,40 @@
+name: destroy terraform infrastructure 
+
+on:
+  workflow_dispatch: 
+    
+jobs:
+  terraform:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+    
+    - name: Configure AWS Credentials
+      uses: aws-actions/configure-aws-credentials@v1
+      with:
+        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY }}
+        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        aws-region: ${{ secrets.AWS_REGION }}
+
+    - name: Install Trivy
+      run: curl -sfL https://raw.githubusercontent.com/aquasecurity/trivy/main/contrib/install.sh | sh
+
+
+    - name: Scan Terraform Files with Trivy
+      run: trivy config .
+  
+
+    - name: Execute terraform init
+      run: terraform init
+
+    - name: Execute terraform validate
+      run: terraform validate
+
+    - name: Execute terraform destroy 
+      run: terraform destroy -auto-approve
+
+    - name: Clean up Terraform State Files
+      run: rm -rf .terraform* terraform.tfstate*
+
