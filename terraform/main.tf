@@ -31,6 +31,7 @@ module "security_group" {
 module "iam" {
   source    = "./modules/iam"
   role_name = "controller"
+  cni_policy_arn = "arn:aws:iam::842676011025:policy/CustomEKSCNIPolicy"
 }
 
 module "eks" {
