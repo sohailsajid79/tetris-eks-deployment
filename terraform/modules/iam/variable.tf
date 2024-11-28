@@ -1,3 +1,4 @@
-variable "aws_iam_role_name" { 
-  type = string
+variable "role_name" {
+  type        = string
+  description = "EKS Cluster Role Name"
 }
