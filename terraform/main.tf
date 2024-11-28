@@ -27,3 +27,20 @@ module "security_group" {
   name   = "eks-sg"
   vpc_id = module.vpc.vpc_id
 }
+
+module "iam" {
+  source    = "./modules/iam"
+  role_name = "controller"
+}
+
+module "eks" {
+  source            = "./modules/eks"
+  cluster_name      = "team-delta-cluster"
+  private_subnets   = module.vpc.private_subnets
+  eks_cluster_role  = module.iam.eks_cluster_role_arn
+  eks_node_role     = module.iam.eks_node_role_arn
+  node_desired_size = 3
+  node_max_size     = 6
+  node_min_size     = 2
+  max_unavailable   = 1
+}
