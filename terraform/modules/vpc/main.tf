@@ -1,91 +1,22 @@
-resource "aws_vpc" "this" {
-  cidr_block           = var.vpc_cidr
-  enable_dns_support   = true
+module "vpc" {
+  source               = "terraform-aws-modules/vpc/aws"
+  version              = "5.16.0"
+  name                 = var.vpc_name
+  cidr                 = var.vpc_cidr
+  azs                  = var.azs
+  public_subnets       = var.public_subnets
+  private_subnets      = var.private_subnets
+  enable_nat_gateway   = true
+  single_nat_gateway   = true
   enable_dns_hostnames = true
-  tags = {
-    Name = "${var.vpc_name}"
+
+  public_subnet_tags = {
+    "kubernetes.io/cluster/team-delta" = "shared"
+    "kubernetes.io/role/elb"           = 1
   }
-}
 
-resource "aws_internet_gateway" "igw" {
-  vpc_id = aws_vpc.this.id
-  tags = {
-    Name = "${var.vpc_name}-igw"
+  private_subnet_tags = {
+    "kubernetes.io/cluster/team-delta" = "shared"
+    "kubernetes.io/role/internal-elb"  = 1
   }
-}
-
-resource "aws_route_table" "public_rt" {
-  vpc_id = aws_vpc.this.id
-  tags = {
-    Name = "${var.vpc_name}-public-rt"
-  }
-}
-
-resource "aws_route_table" "private_rt" {
-  vpc_id = aws_vpc.this.id
-  tags = {
-    Name = "${var.vpc_name}-private-rt"
-  }
-}
-
-resource "aws_route" "public_route" {
-  route_table_id         = aws_route_table.public_rt.id
-  destination_cidr_block = "0.0.0.0/0"
-  gateway_id             = aws_internet_gateway.igw.id
-}
-
-data "aws_availability_zones" "available" {}
-
-resource "aws_subnet" "public_subnet" {
-  count                   = var.public_subnet_count
-  vpc_id                  = aws_vpc.this.id
-  cidr_block              = element(var.public_subnet_cidrs, count.index)
-  availability_zone = element(data.aws_availability_zones.available.names, count.index)
-  map_public_ip_on_launch = true
-
-  tags = {
-    Name                                        = "${var.vpc_name}-public-${count.index + 1}"
-    "kubernetes.io/cluster/${var.cluster_name}" = "shared"
-    "kubernetes.io/role/elb"                    = "1"
-  }
-}
-
-resource "aws_subnet" "private_subnet" {
-  count      = var.private_subnet_count
-  vpc_id     = aws_vpc.this.id
-  cidr_block = element(var.private_subnet_cidrs, count.index)
-  availability_zone = element(data.aws_availability_zones.available.names, count.index)
-
-  tags = {
-    Name                                        = "${var.vpc_name}-private-${count.index + 1}"
-    "kubernetes.io/cluster/${var.cluster_name}" = "shared"
-    "kubernetes.io/role/internal-elb"           = "1"
-  }
-}
-
-resource "aws_nat_gateway" "nat_gw" {
-  allocation_id = aws_eip.nat_eip.id
-  subnet_id     = element(aws_subnet.public_subnet.*.id, 0)
-  tags = {
-    Name = "${var.vpc_name}-nat-gw"
-  }
-}
-
-resource "aws_eip" "nat_eip" {
-  domain = "vpc"
-  tags = {
-    Name = "${var.vpc_name}-nat-eip"
-  }
-}
-
-resource "aws_route_table_association" "public_rt_assoc" {
-  count          = var.public_subnet_count
-  subnet_id      = element(aws_subnet.public_subnet.*.id, count.index)
-  route_table_id = aws_route_table.public_rt.id
-}
-
-resource "aws_route_table_association" "private_rt_assoc" {
-  count          = var.private_subnet_count
-  subnet_id      = element(aws_subnet.private_subnet.*.id, count.index)
-  route_table_id = aws_route_table.private_rt.id
 }
