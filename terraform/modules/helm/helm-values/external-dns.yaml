@@ -1,0 +1,12 @@
+provider: aws
+
+env:
+  - name: AWS_DEFAULT_REGION
+    value: eu-north-1
+
+serviceAccount:
+  annotations:
+    eks.amazonaws.com/role-arn: "arn:aws:iam::842676011025:role/external-dns-irsa-role"
+
+domainFilters:
+  - tetris.sajid023.co.uk
