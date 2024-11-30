@@ -3,45 +3,41 @@ module "aws_ecr_repository" {
   ecr_repository_name = "tetris-js-app"
 }
 
-module "route53" {
-  source            = "./modules/route53"
-  zone_name         = "tetris.sohailsajid.dev" # Subdomain
-  cname_record_name = "tetris.sohailsajid.dev"
-  target_dns_name   = var.target_dns_name # Dynamically pass target DNS name
-}
-
 module "vpc" {
-  source               = "./modules/vpc"
-  vpc_cidr             = "10.0.0.0/16"
-  vpc_name             = "webapp-vpc"
-  cluster_name         = "team-delta"
-  public_subnet_cidrs  = ["10.0.1.0/24", "10.0.2.0/24"]
-  private_subnet_cidrs = ["10.0.3.0/24", "10.0.4.0/24"]
-  public_subnet_count  = 2
-  private_subnet_count = 2
-
-}
-
-module "security_group" {
-  source = "./modules/security_group"
-  name   = "eks-sg"
-  vpc_id = module.vpc.vpc_id
-}
-
-module "iam" {
-  source    = "./modules/iam"
-  role_name = "controller"
-  cni_policy_arn = "arn:aws:iam::842676011025:policy/CustomEKSCNIPolicy"
+  source          = "./modules/vpc"
+  vpc_name        = "webapp-vpc"
+  vpc_cidr        = "10.0.0.0/16"
+  azs             = ["eu-north-1a", "eu-north-1b", "eu-north-1c"]
+  public_subnets  = ["10.0.1.0/24", "10.0.2.0/24", "10.0.3.0/24"]
+  private_subnets = ["10.0.4.0/24", "10.0.5.0/24", "10.0.6.0/24"]
 }
 
 module "eks" {
   source            = "./modules/eks"
   cluster_name      = "team-delta-cluster"
+  cluster_version   = "1.27"
+  vpc_id            = module.vpc.vpc_id
+  public_subnets    = module.vpc.public_subnets
   private_subnets   = module.vpc.private_subnets
-  eks_cluster_role  = module.iam.eks_cluster_role_arn
-  eks_node_role     = module.iam.eks_node_role_arn
-  node_desired_size = 3
-  node_max_size     = 6
-  node_min_size     = 2
-  max_unavailable   = 1
+  iam_role_name     = "controller"
+  node_desired_size = 2
+  node_min_size     = 1
+  node_max_size     = 3
+}
+
+module "irsa" {
+  source                        = "./modules/irsa"
+  oidc_provider_arn             = module.eks.oidc_provider_arn
+  cert_manager_irsa_name        = "cert-manager-irsa-role"
+  external_dns_irsa_name        = "external-dns-irsa-role"
+  cert_manager_hosted_zone_arns = ["arn:aws:route53:::hostedzone/Z01680642RO6GP0HFFCQ6"]
+  external_dns_hosted_zone_arns = ["arn:aws:route53:::hostedzone/Z01680642RO6GP0HFFCQ6"]
+}
+
+module "helm" {
+  source                     = "./modules/helm"
+  helm_resource_ingress_name = "nginx-ingress"
+  helm_resource_certmgr_name = "cert-manager"
+  helm_resource_extdns_name  = "external-dns"
+  cert_manager_irsa_role_arn = module.eks.oidc_provider_arn
 }

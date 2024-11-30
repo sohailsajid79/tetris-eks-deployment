@@ -3,41 +3,42 @@ variable "cluster_name" {
   description = "EKS cluster name"
 }
 
-variable "eks_cluster_role" {
+variable "cluster_version" {
   type        = string
-  description = "EKS Cluster Role ARN"
+  description = "Kubernetes version EKS cluster"
+}
+
+variable "vpc_id" {
+  type        = string
+  description = "EKS cluster VPC ID for deployment"
 }
 
 variable "private_subnets" {
   type        = list(string)
-  description = "EKS Private Subnets"
+  description = "Private subnets for EKS cluster"
 }
 
-variable "eks_node_role" {
+variable "public_subnets" {
+  type        = list(string)
+  description = "Public subnets for EKS cluster"
+}
+
+variable "iam_role_name" {
   type        = string
-  description = "EKS node group ARN"
+  description = "IAM role name for EKS cluster"
 }
 
 variable "node_desired_size" {
-  description = "Desired size of node group"
   type        = number
-  default     = 2
-}
-
-variable "node_max_size" {
-  description = "Maximum size of node group"
-  type        = number
-  default     = 5
+  description = "Desired number of worker nodes"
 }
 
 variable "node_min_size" {
-  description = "Minimum size of node group"
   type        = number
-  default     = 1
+  description = "Minimum number of worker nodes"
 }
 
-variable "max_unavailable" {
-  description = "Minimum size of node group"
+variable "node_max_size" {
   type        = number
-  default     = 1
+  description = "Maximum number of worker nodes"
 }
