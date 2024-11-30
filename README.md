@@ -59,7 +59,10 @@ Integrating security tools into your CI/CD pipeline enhances your ability to ide
 
 ### **Architectural Diagram**
 
-Loading....
+The diagram below illustrates the end-to-end architecture for deploying the Tetris application on Amazon EKS. It shows how Route 53 handles DNS, ACM secures traffic with SSL, and the NGINX Ingress Controller routes requests to the Tetris application Pods running in the Kubernetes cluster. This setup ensures high availability, security, and scalability for the application.
+
+![Architectural Diagram](./team-delta-arc.png)
+
 
 ---
 
