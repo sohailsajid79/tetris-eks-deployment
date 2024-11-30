@@ -1,29 +1,15 @@
-output "vpc_cidr" {
-  description = "VPC CIDR block"
-  value       = module.vpc.vpc_cidr
+output "cluster_name" {
+  value = module.eks.cluster_name
 }
 
-output "vpc_id" {
-  description = "VPC ID"
-  value       = module.vpc.vpc_id
+output "cluster_endpoint" {
+  value = module.eks.cluster_endpoint
 }
 
-output "public_subnet_ids" {
-  description = "Public Subnet IDs"
-  value       = module.vpc.public_subnets
+output "cluster_certificate_authority_data" {
+  value = module.eks.cluster_certificate_authority_data
 }
 
-output "private_subnet_ids" {
-  description = "Private Subnet IDs"
-  value       = module.vpc.private_subnets
-}
-
-output "nat_gateway_id" {
-  description = "NAT Gateway ID"
-  value       = module.vpc.nat_gateway_id
-}
-
-output "nat_eip" {
-  description = "NAT Gateway Elastic IP"
-  value       = module.vpc.nat_eip
+output "eks_oidc_provider_arn" {
+  value = module.eks.oidc_provider_arn
 }
