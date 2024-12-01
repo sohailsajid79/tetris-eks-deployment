@@ -16,16 +16,16 @@ module "eks" {
     min_capacity     = var.node_min_size
     max_capacity     = var.node_max_size
     instance_types   = ["t3.medium"]
-    disk_size        = 20
+    disk_size        = 50
   }
 
   eks_managed_node_groups = {
     default = {}
   }
 
-  cluster_encryption_config = {
-    resources = ["secrets"]
-  }
+  # cluster_encryption_config = {
+  #   resources = ["secrets"]
+  # }
 
   # API endpoint access
   cluster_endpoint_public_access       = true

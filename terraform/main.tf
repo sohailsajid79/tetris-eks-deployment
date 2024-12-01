@@ -14,7 +14,7 @@ module "vpc" {
 
 module "eks" {
   source            = "./modules/eks"
-  cluster_name      = "team-delta-cluster"
+  cluster_name      = var.cluster_name
   cluster_version   = "1.27"
   vpc_id            = module.vpc.vpc_id
   public_subnets    = module.vpc.public_subnets
@@ -39,5 +39,6 @@ module "helm" {
   helm_resource_ingress_name = "nginx-ingress"
   helm_resource_certmgr_name = "cert-manager"
   helm_resource_extdns_name  = "external-dns"
-  cert_manager_irsa_role_arn = module.eks.oidc_provider_arn
+  cert_manager_irsa_role_arn = module.irsa.cert_manager_irsa_role_arn
+  external_dns_irsa_role_arn = module.irsa.external_dns_irsa_role_arn
 }
